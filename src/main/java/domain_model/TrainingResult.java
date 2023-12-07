@@ -20,9 +20,12 @@ public class TrainingResult {
     public int getIdNumber() {
         return idNumber;
     }
-
-    public double getTimeResult() {
+    public double getResult() {
         return timeResult;
+    }
+
+    public void setTimeResult(double timeResult) {
+        this.timeResult = timeResult;
     }
 
     public String getDate() {
@@ -49,9 +52,6 @@ public class TrainingResult {
         isPractice = practice;
     }
 
-    public void setTimeResult(double timeResult) {
-        this.timeResult = timeResult;
-    }
 
     public void setDiscipline(String discipline) {
         this.discipline = discipline;

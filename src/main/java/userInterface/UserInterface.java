@@ -4,30 +4,24 @@ import java.util.ArrayList;
 
 import domain_model.Coach;
 import domain_model.Controller;
-import domain_model.Database;
+
 import domain_model.Member;
 import domain_model.TrainingResult;
 import domain_model.CompetitionResult;
-
+import java.util.List;
 import java.util.Scanner;
 import java.util.InputMismatchException;
 
 public class UserInterface {
-    private Scanner scanner;
-    private Database database;
-    private Controller controller;
-
-    public UserInterface() {
-        this.scanner = new Scanner(System.in);
-        this.database = new Database();
-        this.controller = new Controller(database);
-    }
+    Scanner scanner = new Scanner(System.in);
+    Controller controller = new Controller();
 
     public void start() {
         controller.createTestData();
         controller.createTestDataCoach();
         controller.createTournamentResultTestData();
-        controller.createPracticeResultTestData();
+        controller.createTrainingResultTestData();
+        System.out.println("Velkommen til svømmeklubben Delfin");
         boolean menuError;
 
         do {
@@ -38,11 +32,11 @@ public class UserInterface {
                     if (menuChoice == 1) {
                         createMember();
                     } else if (menuChoice == 2) {
-                        seeMembers();
-                    } else if (menuChoice == 3) {
-                        searchMembers();
-                    } else if (menuChoice == 4) {
                         editMember();
+                    } else if (menuChoice == 3) {
+                        seeMembers();
+                    } else if (menuChoice == 4) {
+                        searchMembers();
                     } else if (menuChoice == 5) {
                         deleteMember();
                     } else if (menuChoice == 6) {
@@ -50,52 +44,58 @@ public class UserInterface {
                     } else if (menuChoice == 7) {
                         loadMembers();
                     } else if (menuChoice == 8) {
-                        seeTeams();
+                        seeMemberships();
                     } else if (menuChoice == 9) {
-                        createResult();
+                        seeTeams();
                     } else if (menuChoice == 10) {
-                        seeResults();
+                        createResult();
                     } else if (menuChoice == 11) {
+                        editResult();
+                    } else if (menuChoice == 12) {
+                        seeResults();
+                    } else if (menuChoice == 13) {
+                        seeTopFive();
+                    } else if (menuChoice == 14) {
                         endProgram();
                     }
                     menuError = false;
                 } catch (InputMismatchException ime) {
-                    System.out.println("Skriv et tal");
+                    System.out.println("Skriv kun tal");
                     scanner.nextLine();
                     menuError = true;
                 }
-            } while (menuError);
+            } while (menuError == true);
         } while (true);
     }
 
     public void startPage() {
 
-        System.out.println("\nMENU: ");
         System.out.println("1. Opret medlem");
-        System.out.println("2. Se medlem");
-        System.out.println("3. Søg efter medlem");
-        System.out.println("4. Rediger medlem");
+        System.out.println("2. Rediger medlemmer");
+        System.out.println("3. Se alle medlemmer");
+        System.out.println("4. Søg efter et medlem");
         System.out.println("5. Slet medlem");
-        System.out.println("6. Gem indtastede information");
+        System.out.println("6. Gem medlem i databasen");
         System.out.println("7. Load sidste indtastede information");
-        System.out.println("8. Se hold");
-        System.out.println("9. Registrere resultater ");
-        System.out.println("10. Se resultater ");
-        System.out.println("11. Afslut program");
-        System.out.println("Vælg en valgmulighed: ");
-
+        System.out.println("8. Kontigentbetaling");
+        System.out.println("9. Se hold");
+        System.out.println("10. Registrere resultater");
+        System.out.println("11. Rediger resultater");
+        System.out.println("12. Se resultater");
+        System.out.println("13. Se top 5 svømmere");
+        System.out.println("14. Afslut programmet");
     }
 
     public void createMember() {
         boolean writingError = false;
         scanner.nextLine();
-        System.out.println("Indtast fornavn på nyt medlem: ");
+        System.out.println("Indtast fornavn");
         String firstName = scanner.nextLine();
 
         System.out.println("Indtast efternavn");
         String lastName = scanner.nextLine();
 
-        System.out.println("Indtast svømmetype. Indtast 'm' for motionist eller 'k' for konkurrencesvømmer");
+        System.out.println("Indtast svømmetype, skriv 'm' for motionistsvømmer eller 'k' for konkurrencesvømmer)");
         boolean competitive = true;
         char swimTypeAnswer;
         do {
@@ -107,7 +107,7 @@ public class UserInterface {
                 competitive = false;
                 break;
             } else
-                System.out.println("Tastefejl, tast 'm' eller 'k'");
+                System.out.println("Tastefejl, skriv 'motionist' eller 'konkurrencesvømmer'");
 
         } while (swimTypeAnswer != 'm' || swimTypeAnswer != 'k');
 
@@ -124,10 +124,10 @@ public class UserInterface {
                 scanner.nextLine();
                 writingError = true;
             }
-        } while (writingError);
+        } while (writingError == true);
 
 
-        System.out.println("Indtast medlems aktivitet i svømmeklubben. Indtast 'a' for aktiv eller 'p' for passiv.");
+        System.out.println("Indtast aktivitet i klubben, 'a' for 'aktivt eller 'p' for passiv)");
         boolean active = true;
         char activityAnswer;
         do {
@@ -139,7 +139,7 @@ public class UserInterface {
                 active = false;
                 break;
             } else
-                System.out.println("Tastefejl, tast 'a' eller 'p'");
+                System.out.println("Tastefejl, indtast 'aktiv eller 'passiv'");
 
         } while (activityAnswer != 'a' || activityAnswer != 'p');
 
@@ -156,86 +156,13 @@ public class UserInterface {
                 scanner.nextLine();
                 writingError = true;
             }
-        } while (writingError);
+        } while (writingError == true);
+
 
         controller.createMember(firstName, lastName, competitive, age, active, idNumber);
         controller.setJuniorOrSenior();
 
     }
-
-    public void seeMembers() {
-        System.out.println("Registreret medlemmer af svømmeklubben");
-
-        if (controller.getMembers().isEmpty()) {
-            System.out.println("Ingen medlemmer blev fundet");
-            System.out.println();
-        } else {
-            for (Member member : controller.getMembers()) {
-                System.out.println("Navn: " + member.getFirstName());
-                System.out.println("Efternavn: " + member.getLastName());
-                if (member.isCompetitive())
-                    System.out.println("Svømmetype: Konkurrencesvømmer");
-                else
-                    System.out.println("Svømmetype: Motionist");
-                if (member.isActive())
-                    System.out.println("Medlemsstatus: Aktiv");
-                else
-                    System.out.println("Medlemsstatus: Passiv");
-                System.out.println("Alder: " + member.getAge());
-                System.out.println("Medlemsnummer: " + member.getIdNumber());
-
-                controller.setJuniorOrSenior();
-                if (member.isJunior()) {
-                    System.out.println("Aldersgruppe: Junior");
-                } else {
-                    System.out.println("Aldersgruppe: Senior");
-                }
-                System.out.println(" ");
-            }
-
-        }
-    }
-
-    public void searchMembers() {
-        System.out.println("Søg efter et medlem");
-
-        System.out.print("Indtast fornavn: ");
-        scanner.nextLine();
-        String searchTerm = scanner.nextLine();
-        System.out.println();
-
-        ArrayList<Member> searchResult = controller.searchMembersFirstName(searchTerm);
-
-        if (searchResult.isEmpty()) {
-            System.out.println("Intet medlem med dette fornavn blev fundet");
-            System.out.println();
-        } else {
-            System.out.println("Medlem fundet");
-            for (Member member : searchResult) {
-                System.out.println("Navn: " + member.getFirstName());
-                System.out.println("Efternavn: " + member.getLastName());
-                if (member.isCompetitive()) {
-                    System.out.println("Svømmetype: Konkurrencesvømmer");
-                } else {
-                    System.out.println("Svømmetype: Motionist");
-                }
-                if (member.isActive()) {
-                    System.out.println("Medlemsstatus: Aktivt");
-                } else {
-                    System.out.println("Medlemsstatus: Passivt");
-                }
-                System.out.println("Alder: " + member.getAge());
-                System.out.println("Medlemsnummer: " + member.getIdNumber());
-                if (member.isJunior()) {
-                    System.out.println("Aldersgruppe: Junior");
-                } else {
-                    System.out.println("Aldersgruppe: Senior");
-                }
-                System.out.println();
-            }
-        }
-    }
-
 
     public void editMember() {
         boolean writingError;
@@ -255,15 +182,15 @@ public class UserInterface {
                 writingError = false;
                 editMember = controller.getMembers().get(number - 1);
             } catch (IndexOutOfBoundsException ibe) {
-                System.out.println("Indtast kun et af numrene vist på skærmen!");
+                System.out.println("Tastefejl, indtast nummeret på medlemmet du til redigere");
                 scanner.nextLine();
                 writingError = true;
             }
-        } while (writingError);
+        } while (writingError == true);
 
 
-        System.out.println("Redigere medlemmets information: " + editMember);
-        System.out.println("Indtast nyt data. Hvis du ikke ønsker at redigere tryk 'Enter'.");
+        System.out.println("Redigere information: " + editMember);
+        System.out.println("Tast ny data. Ønsker du ikke at redigere, tryk Enter.");
 
         System.out.println("Fornavn: " + editMember.getFirstName());
         String newName = scanner.nextLine();
@@ -277,11 +204,11 @@ public class UserInterface {
             editMember.setLastName(newLName);
 
 
-        System.out.println("Svømmetype: (Skriv motionist eller konkurrencesvømmer)" + editMember.isCompetitive());
+        System.out.println("Svømmetype, indtast 'motionist' eller 'konkurrence')" + editMember.isCompetitive());
         String newSwimtype = scanner.nextLine();
         if (!newSwimtype.isEmpty()) {
             while (!newSwimtype.equals("motionist") && !newSwimtype.equals("konkurrence")) {
-                System.out.println("Fejl. Tast motionist eller konkurrence");
+                System.out.println("Tastefejl, indtast motionist eller konkurrence");
                 newSwimtype = scanner.nextLine();
             }
         }
@@ -295,69 +222,169 @@ public class UserInterface {
                     writingError = false;
 
                 } catch (NumberFormatException nfe) {
-                    System.out.println("Input fejl. Indtast tal.");
+                    System.out.println("Tastefejl, indtast kun tal");
                     writingError = true;
                 }
             }
-        } while (writingError);
+        } while (writingError == true);
 
-        controller.setJuniorOrSenior();
 
-        System.out.println("Medlemsstatus: (aktiv eller passiv)" + editMember.isActive());
+        System.out.println("Medlemsstatus, skriv 'aktiv' eller 'passiv')" + editMember.isActive());
         String newActive = scanner.nextLine();
         if (!newActive.isEmpty()) {
             while (!newActive.equals("passiv") && !newActive.equals("aktiv")) {
-                System.out.println("Fejl. Tast kun aktiv eller passiv");
+                System.out.println("Tastefejl, indtast 'aktiv' eller 'passiv'");
                 newActive = scanner.nextLine();
             }
 
             boolean active;
-            active = newActive.equals("aktiv");
+            if (newActive.equals("aktiv")) {
+                active = true;
+            } else {
+                active = false;
+            }
             editMember.setActive(active);
 
 
             System.out.println("Medlemsnummer: " + editMember.getIdNumber());
             do {
-                String newIdNumber = scanner.nextLine().trim();
-                if (!newIdNumber.isEmpty()) {
+                String newMembershipNumber = scanner.nextLine().trim();
+                if (!newMembershipNumber.isEmpty()) {
                     try {
-                        editMember.setAge(Integer.parseInt(newIdNumber));
+                        editMember.setAge(Integer.parseInt(newMembershipNumber));
                         writingError = false;
 
                     } catch (NumberFormatException e) {
-                        System.out.println("Input fejl. Indtast kun tal.");
+                        System.out.println("Tastefejl, Indtast kun tal.");
                         writingError = true;
                     }
                 }
-            } while (writingError);
+            } while (writingError == true);
 
+            controller.setJuniorOrSenior();
 
         }
     }
 
+    public void seeMembers() {
+        System.out.println("Registreret medlemmer i systemet");
+
+        if (controller.getMembers().isEmpty()) {
+            System.out.println("Ingen medlemmer blev fundet i systemet");
+            System.out.println("");
+        } else {
+            for (Member member : controller.getMembers()) {
+                System.out.println("Navn: " + member.getFirstName());
+                System.out.println("Efternavn: " + member.getLastName());
+                if (member.isCompetitive() == true)
+                    System.out.println("Svømmetype: Konkurrencesvømmer");
+                else
+                    System.out.println("Svømmetype: Motionistsvømmer");
+                if (member.isActive() == true)
+                    System.out.println("Medlemsstatus: Aktivt");
+                else
+                    System.out.println("Medlemsstatus: Passivt");
+                System.out.println("Alder: " + member.getAge());
+                System.out.println("Medlemsnummer: " + member.getIdNumber());
+
+                controller.setJuniorOrSenior();
+                if (member.isJunior() == true) {
+                    System.out.println("Aldersgruppe: Junior");
+                } else {
+                    System.out.println("Aldersgruppe: Senior");
+                }
+                System.out.println(" ");
+            }
+
+        }
+    }
+
+    public void searchMembers() {
+
+            System.out.print("Indtast fornavn: ");
+            scanner.nextLine();
+            String searchTerm = scanner.nextLine();
+            System.out.println("");
+
+            ArrayList<Member> searchResult = controller.searchMembersFirstName(searchTerm);
+
+            if (searchResult.isEmpty()) {
+                System.out.println("Ingen medlemmer med dette navn blev fundet i systemet");
+                System.out.println("");
+            } else {
+                System.out.println("Medlemmer fundet");
+                for (Member member : searchResult) {
+                    System.out.println("Navn: " + member.getFirstName());
+                    System.out.println("Efternavn: " + member.getLastName());
+                    if (member.isCompetitive() == true) {
+                        System.out.println("Svømmetype: Konkurrencesvømmer");
+                    } else {
+                        System.out.println("Svømmetype: Motionistsvømmer");
+                    }
+                    if (member.isActive() == true) {
+                        System.out.println("Medlemsstatus: Aktivt");
+                    } else {
+                        System.out.println("Medlemsstatus: Passivt");
+                    }
+                    System.out.println("Alder: " + member.getAge());
+                    System.out.println("Medlemsnummer: " + member.getIdNumber());
+                    if (member.isJunior() == true) {
+                        System.out.println("Aldersgruppe: Junior");
+                    } else {
+                        System.out.println("Aldersgruppe: Senior");
+                    }
+                    System.out.println("");
+                }
+            }
+
+
+            }
+
+
+
+
     public void deleteMember() {
         boolean delete = false;
-        System.out.println("Slet et medlem fra svømmeklubben");
+        System.out.println("Slet medlemmer fra systemet");
         for (int i = 0; i < controller.getMembers().size(); i++)
             System.out.println(i + 1 + ": " + controller.getMembers().get(i));
 
-        System.out.println("Indtast nummeret på medlemet du vil slette");
+        System.out.println("Indtast nummeret på medlemmet du vil slette fra systemet");
         int number = scanner.nextInt();
         scanner.nextLine();
 
         Member deleteMember = controller.getMembers().get(number - 1);
         controller.deleteMember(deleteMember);
-        System.out.println("Det valgte medlem er slettet fra databasen");
+        System.out.println("Valgte medlem er blevet slettet");
     }
 
     public void saveMembers() {
         controller.saveMembers();
-        System.out.println("Indtastede information er gemt" + "\n");
+        System.out.println("Medlem gemt i databasen" + "\n");
     }
 
     public void loadMembers() {
         controller.loadMembers();
-        System.out.println("Data loaded");
+        System.out.println("Data er blevetloaded");
+    }
+
+    public void seeMemberships() {
+        System.out.println("Liste over kontigentbetalinger - Tast 1");
+        System.out.println("Samlet årlig indkomst - Tast 2");
+
+        int menu = scanner.nextInt();
+        if (menu == 1) {
+            System.out.println("Kontingent for hvert medlem: ");
+            for (Member member : controller.getMembers()) {
+                System.out.println(member.getFirstName() + " " + member.getLastName() + ": " + member.getPayment());
+            }
+            System.out.println(" ");
+
+        } else if (menu == 2) {
+            System.out.println("Samlet kontingent for året: " + controller.getTotalPayment() + " kr." + "\n");
+
+
+    }
     }
 
     public void seeTeams() {
@@ -378,7 +405,7 @@ public class UserInterface {
             System.out.println("Senior svømmere:");
             for (Member member : controller.getMembers()) {
                 controller.setJuniorOrSenior();
-                if (!member.isJunior()) {
+                if (member.isJunior() == false) {
                     System.out.println(member.getFirstName() + " \n ");
                 }
             }
@@ -395,10 +422,9 @@ public class UserInterface {
             System.out.println("Junior svømmere:");
             for (Member member : controller.getMembers()) {
                 controller.setJuniorOrSenior();
-                if (member.isJunior()) {
+                if (member.isJunior() == true) {
                     System.out.println(member.getFirstName() + " " + member.getLastName() + " \n ");
                 }
-
             }
         }
     }
@@ -412,10 +438,10 @@ public class UserInterface {
             boolean isPractice = true;
 
             System.out.println("Indtast medlemsnummer:");
-            int membershipNumber = 0;
+            int idNumber = 0;
             do {
                 try {
-                    membershipNumber = scanner.nextInt();
+                    idNumber = scanner.nextInt();
                     scanner.nextLine();
                     writingError = false;
                 } catch (InputMismatchException e) {
@@ -423,7 +449,7 @@ public class UserInterface {
                     scanner.nextLine();
                     writingError = true;
                 }
-            } while (writingError);
+            } while (writingError == true);
 
             System.out.println("Indtast træningstid i sekunder:");
             double timeResult = 0;
@@ -437,11 +463,11 @@ public class UserInterface {
                     scanner.nextLine();
                     writingError = true;
                 }
-            } while (writingError);
+            } while (writingError == true);
 
 
             System.out.println("Indtast disciplin:");
-            String discipline = scanner.nextLine();
+            String disciplin = scanner.nextLine();
 
             System.out.println("Indtast dato:");
             String date = scanner.nextLine();
@@ -455,24 +481,24 @@ public class UserInterface {
             } else {
                 isJunior = false;
             }
-            controller.createTrainingResult(timeResult, isPractice, discipline, date, membershipNumber, isJunior);
+            controller.createTrainingResult(timeResult, isPractice, disciplin, date, idNumber, isJunior);
 
 
         } else if (menu == 2) {
             boolean isPractice = false;
             System.out.println("Indtast medlemsnummer:");
-            int membershipNumber = 0;
+            int idNumber = 0;
             do {
                 try {
-                    membershipNumber = scanner.nextInt();
+                    idNumber = scanner.nextInt();
                     scanner.nextLine();
                     writingError = false;
                 } catch (InputMismatchException e) {
-                    System.out.println("Tastefejl, indtast kun tal");
+                    System.out.println("Tastefejl, indtast kun et tal");
                     scanner.nextLine();
                     writingError = true;
                 }
-            } while (writingError);
+            } while (writingError == true);
 
             System.out.println("Indtast konkurrencetid i sekunder:");
             double timeResult = 0;
@@ -486,17 +512,17 @@ public class UserInterface {
                     scanner.nextLine();
                     writingError = true;
                 }
-            } while (writingError);
+            } while (writingError == true);
 
             System.out.println("Indtast disciplin:");
-            String discipline = scanner.nextLine();
+            String disciplin = scanner.nextLine();
             scanner.nextLine();
 
             System.out.println("Indtast placering:");
             int placement = 0;
             do {
                 try {
-                    membershipNumber = scanner.nextInt();
+                    idNumber = scanner.nextInt();
                     scanner.nextLine();
                     writingError = false;
                 } catch (InputMismatchException e) {
@@ -504,7 +530,7 @@ public class UserInterface {
                     scanner.nextLine();
                     writingError = true;
                 }
-            } while (writingError);
+            } while (writingError == true);
 
             System.out.println("Indtast navn på stævne:");
             String tournamentName = scanner.nextLine();
@@ -513,22 +539,189 @@ public class UserInterface {
             String date = scanner.nextLine();
             System.out.println("\n");
 
-            controller.createCompetitionResult(timeResult, isPractice, placement, discipline, tournamentName, date, membershipNumber);
+            controller.createCompetitionResult(timeResult, isPractice, placement, disciplin, tournamentName, date, idNumber);
         }
 
     }
 
+    public void editResult() {
+        boolean writingError = false;
+        System.out.println("Redigere træningsresultater - Tast 1");
+        System.out.println("Redigere konkurrenceresultater - Tast 2");
+        int menu = scanner.nextInt();
+        if (menu == 1) {
+
+            System.out.println("Vælg den tid du vil redigere: ");
+            for (int i = 0; i < controller.getTrainingResults().size(); i++) {
+                System.out.println(i + 1 + ")" + controller.getTrainingResults().get(i));
+            }
+
+            System.out.println("Indtast nummeret på den valgte tid: ");
+            int number;
+            TrainingResult editResult = null;
+
+            do {
+                try {
+                    number = scanner.nextInt();
+                    scanner.nextLine();
+                    writingError = false;
+                    editResult = controller.getTrainingResults().get(number - 1);
+                } catch (InputMismatchException ime) {
+                    System.out.println("Skriv kun numre, tak!");
+                    scanner.nextLine();
+                    writingError = true;
+                }
+            } while (writingError == true);
+
+
+
+            System.out.println("Medlemsnummer: " + editResult.getIdNumber());
+            do {
+                String newMembershipNumber = scanner.nextLine().trim();
+                if (!newMembershipNumber.isEmpty()) {
+                    try {
+                        editResult.setIdNumber(Integer.parseInt(newMembershipNumber));
+                        writingError = false;
+
+                    } catch (NumberFormatException nfe) {
+                        System.out.println("Tastefejl, indtast kun tal");
+                        writingError = true;
+                    }
+                }
+            } while (writingError == true);
+
+
+            System.out.println("Disciplin: " + editResult.getDiscipline());
+            String newDisciplin = scanner.nextLine();
+            if (!newDisciplin.isEmpty())
+                editResult.setDiscipline(newDisciplin);
+
+
+            System.out.println("Tid: " + editResult.getResult());
+            do {
+                String newResult = scanner.nextLine().trim();
+                if (!newResult.isEmpty()) {
+                    try {
+                        editResult.setTimeResult(Integer.parseInt(newResult));
+                        writingError = false;
+
+                    } catch (NumberFormatException nfe) {
+                        System.out.println("Tastefejl, indtast kun tal");
+                        writingError = true;
+                    }
+                }
+            } while (writingError == true);
+
+
+            System.out.println("Dato: " + editResult.getDate());
+            String newDate = scanner.nextLine();
+            if (!newDate.isEmpty())
+                editResult.setDate(newDate);
+
+        } else if (menu == 2) {
+
+            System.out.println("Vælg den tid du vil ændre: ");
+            for (int i = 0; i < controller.getCompetitionResults().size(); i++) {
+                System.out.println(i + 1 + ")" + controller.getCompetitionResults().get(i));
+            }
+
+            System.out.println("Indtast nummeret på den valgte tid: ");
+            int number;
+            CompetitionResult editResult = null;
+
+            do {
+                try {
+                    number = scanner.nextInt();
+                    scanner.nextLine();
+                    writingError = false;
+                    editResult = controller.getCompetitionResults().get(number - 1);
+                } catch (InputMismatchException ime) {
+                    System.out.println("Tastefejl, indtast kun tal");
+                    scanner.nextLine();
+                    writingError = true;
+                }
+            } while (writingError == true);
+
+
+            System.out.println("Medlemsnummer: " + editResult.getIdNumber());
+            do {
+                String newMembershipNumber = scanner.nextLine().trim();
+                if (!newMembershipNumber.isEmpty()) {
+                    try {
+                        editResult.setIdNumber(Integer.parseInt(newMembershipNumber));
+                        writingError = false;
+
+                    } catch (NumberFormatException e) {
+                        System.out.println("Tastefejl, indtast kun tal");
+                        writingError = true;
+                    }
+                }
+            } while (writingError == true);
+
+
+            System.out.println("Disciplin: " + editResult.getDiscipline());
+            String newDisciplin = scanner.nextLine();
+            if (!newDisciplin.isEmpty())
+                editResult.setDiscipline(newDisciplin);
+
+
+            System.out.println("Tid: " + editResult.getResult());
+            do {
+                String newResult = scanner.nextLine().trim();
+                if (!newResult.isEmpty()) {
+                    try {
+                        editResult.setTimeResult(Integer.parseInt(newResult));
+                        writingError = false;
+
+                    } catch (NumberFormatException e) {
+                        System.out.println("Tastefejl, indtast kun tal");
+                        writingError = true;
+                    }
+                }
+            } while (writingError == true);
+
+
+            System.out.println("Placering: " + editResult.getPlacement());
+            do {
+                String newPlacement = scanner.nextLine().trim();
+                if (!newPlacement.isEmpty()) {
+                    try {
+                        editResult.setTimeResult(Integer.parseInt(newPlacement));
+                        writingError = false;
+
+                    } catch (NumberFormatException e) {
+                        System.out.println("Tastefejl, indtast kun tal");
+                        writingError = true;
+                    }
+                }
+            } while (writingError == true);
+
+
+            System.out.println("Dato: " + editResult.getDate());
+            String newDate = scanner.nextLine();
+            if (!newDate.isEmpty())
+                editResult.setDate(newDate);
+
+
+            System.out.println("Stævnenavn: " + editResult.getTournamentName());
+            String newTournamentName = scanner.nextLine();
+            if (!newTournamentName.isEmpty())
+                editResult.setTournamentName(newTournamentName);
+
+
+        }
+    }
 
     public void seeResults() {
         System.out.println("Se træningsresultater - Tast 1");
-        System.out.println("Se konkurrenceresultater - Tast 2");
+        System.out.println(" Se konkurrenceresultater - Tast 2");
         int menu = scanner.nextInt();
         if (menu == 1) {
             System.out.println("Træningresultater: " + "\n");
             for (TrainingResult result : controller.getTrainingResults()) {
                 System.out.println("Medlemsnummer: " + result.getIdNumber());
                 System.out.println("Dicsiplin: " + result.getDiscipline());
-                System.out.println("Tid: " + result.getTimeResult());
+                System.out.println("Tid: " + result.getResult());
                 System.out.println("Dato: " + result.getDate());
                 System.out.println("Junior: " + result.isJunior());
                 System.out.println(" ");
@@ -539,10 +732,10 @@ public class UserInterface {
             for (CompetitionResult result : controller.getCompetitionResults()) {
                 System.out.println("Medlemsnummer: " + result.getIdNumber());
                 System.out.println("Disciplin: " + result.getDiscipline());
-                System.out.println("Tid: " + result.getTimeResult());
+                System.out.println("Tid: " + result.getResult());
                 System.out.println("Placering: " + result.getPlacement());
                 System.out.println("Dato: " + result.getDate());
-                System.out.println("Stævne: " + result.getTournamentName());
+                System.out.println("Stævnenavn: " + result.getTournamentName());
                 System.out.println(" ");
 
 
@@ -552,12 +745,70 @@ public class UserInterface {
 
     }
 
-
-    public void endProgram() {
-        System.out.println("Lukker programmet! ");
-        System.exit(9);
+    public ArrayList<TrainingResult> findJuniorResults() {
+        ArrayList<TrainingResult> practiceResultsJunior = new ArrayList<>();
+        for (TrainingResult result : controller.getTrainingResults()) {
+            if (result.isJunior()) {
+                practiceResultsJunior.add(result);
+            }
+        }
+        return practiceResultsJunior;
     }
 
-}
+    public ArrayList<TrainingResult> findSeniorResults() {
+        ArrayList<TrainingResult> practiceResultsSenior = new ArrayList<>();
+        for (TrainingResult result : controller.getTrainingResults()) {
+            if (!result.isJunior()) {
+                practiceResultsSenior.add(result);
+            }
+        }
+        return practiceResultsSenior;
+    }
 
+    public List<TrainingResult> getTopFive(ArrayList<TrainingResult> results) {
+        List<TrainingResult> list = results;
+        if (results.size() > 5) {
+            return list.subList(0, 5);
+        }
+        return results;
+    }
+
+    public void seeTopFive() {
+        System.out.println("Se top 5 svømmere for Junior - Tast 1");
+        System.out.println("Se top 5 svømmere for Senior - Tast 2");
+        int menu = scanner.nextInt();
+        if (menu == 1) {
+            controller.sortTopFive();
+            System.out.println("Top 5 juniorsvømmere: " + "\n");
+
+            ArrayList<TrainingResult> juniorResults = findJuniorResults();
+            List<TrainingResult> juniorResultsTopFive = getTopFive(juniorResults);
+
+            for (TrainingResult practiceResult : juniorResultsTopFive) {
+                System.out.println("Discpline: " + practiceResult.getDiscipline() + "\n" +
+                        "Resultat: " + practiceResult.getResult() + "\n" +
+                        "Medlemsnummer: " + practiceResult.getIdNumber() + "\n");
+
+            }
+
+        } else if (menu == 2) {
+            controller.sortTopFive();
+            System.out.println("Top 5 seniorsvømmere: " + "\n");
+
+            ArrayList<TrainingResult> seniorResults = findSeniorResults();
+            List<TrainingResult> seniorResultsTopFive = getTopFive(seniorResults);
+
+            for (TrainingResult practiceResult : seniorResultsTopFive) {
+                System.out.println("Discplin: " + practiceResult.getDiscipline() + "\n" +
+                        "Resultat: " + practiceResult.getResult() + "\n" +
+                        "Medlemsnummer: " + practiceResult.getIdNumber() + "\n");
+            }
+        }
+    }
+
+    public void endProgram() {
+        System.out.println("Lukker programmet... ");
+        System.exit(9);
+    }
+}
 

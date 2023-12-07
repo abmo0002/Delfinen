@@ -1,26 +1,28 @@
 package domain_model;
 
 public class Member {
+    private CompetitionResult result;
+    private Membership membership;
+
     private String firstName;
     private String lastName;
+    private boolean isCompetitive;
     private int age;
     private boolean isActive;
-    private boolean isCompetitive;
     private int idNumber;
     private boolean isJunior;
+
+    public Member() {
+    }
 
     public Member(String firstName, String lastName, boolean isCompetitive, int age, boolean isActive, int idNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.isCompetitive = isCompetitive;
         this.age = age;
         this.isActive = isActive;
-        this.isCompetitive = isCompetitive;
         this.idNumber = idNumber;
-
-    }
-
-    public Member() {
-
+        this.membership = new Membership(this);
     }
 
     public String getFirstName() {
@@ -31,16 +33,16 @@ public class Member {
         return lastName;
     }
 
+    public boolean isCompetitive() {
+        return isCompetitive;
+    }
+
     public int getAge() {
         return age;
     }
 
     public boolean isActive() {
         return isActive;
-    }
-
-    public boolean isCompetitive() {
-        return isCompetitive;
     }
 
     public int getIdNumber() {
@@ -51,6 +53,7 @@ public class Member {
         return isJunior;
     }
 
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -59,24 +62,24 @@ public class Member {
         this.lastName = lastName;
     }
 
+    public void setCompetitive(boolean competitive) {
+        this.isCompetitive = competitive;
+    }
+
     public void setAge(int age) {
         this.age = age;
     }
 
     public void setActive(boolean active) {
-        isActive = active;
+        this.isActive = active;
     }
 
-    public void setCompetitive(boolean competitive) {
-        isCompetitive = competitive;
-    }
-
-    public void setIdNumber(int idNumber) {
-        this.idNumber = idNumber;
+    public void setIdNumber(int memberShipNumber) {
+        this.idNumber = memberShipNumber;
     }
 
     public void setJunior(boolean junior) {
-        isJunior = junior;
+        this.isJunior = junior;
     }
 
     public ageGroup memberAgeGroup() {
@@ -90,6 +93,14 @@ public class Member {
         }
     }
 
+    public Membership getMembership() {
+        return membership;
+    }
+
+    public double getPayment() {
+        return getMembership().getMembershipForEachMember();
+    }
+
     public void setJuniorOrSenior() {
         if (age < 18) {
             setJunior(true);
@@ -97,7 +108,6 @@ public class Member {
             setJunior(false);
         }
     }
-
     public String toString() {
         return ("Fornavn: " + firstName + "\n" + "Efternavn: " + lastName + "\n" + "Alder: " + age + "\n" + "Aktiv: " + isActive + "\n" + "Konkurrencesvømmer: " + isCompetitive + "\n"
                 + "MedlemID " + idNumber + "\n" + "Aldergruppe " + isJunior + "\n");
