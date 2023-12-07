@@ -48,8 +48,8 @@ public class Database {
     }
 
     public void createCoachData() {
-        createCoach("Simon", "Leander", false, 72, true, 200, true);
-        createCoach("Nidos", "Kräms", false, 23, true, 100, false);
+        createCoach("Niels", "Rasmussen", false, 60, true, 2244, true);
+        createCoach("Kim", "Toft", false, 20, true, 1122, false);
     }
 
     public void createTournamentResultTestData () {
