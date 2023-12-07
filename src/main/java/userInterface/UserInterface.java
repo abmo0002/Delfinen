@@ -21,7 +21,7 @@ public class UserInterface {
         this.scanner = new Scanner(System.in);
         this.database = new Database();
         this.controller = new Controller(database);
-    }
+    }//to switch controller add scanner from lef to right8
 
     public void start() {
         controller.createTestData();
