@@ -26,8 +26,12 @@ public class CompetitionResult {
         return idNumber;
     }
 
-    public double getTimeResult() {
+    public double getResult() {
         return timeResult;
+    }
+
+    public void setTimeResult(double timeResult) {
+        this.timeResult = timeResult;
     }
 
     public boolean isPractice() {
@@ -66,9 +70,6 @@ public class CompetitionResult {
         this.placement = placement;
     }
 
-    public void setTimeResult(double timeResult) {
-        this.timeResult = timeResult;
-    }
 
     public void setPractice(boolean practice) {
         isPractice = practice;

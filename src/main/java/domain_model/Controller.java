@@ -1,51 +1,49 @@
 package domain_model;
 
+import datasource.Database;
+import datasource.FileHandler;
+
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-import datasource.FileHandler;
-
 public class Controller {
-    private Member member;
     private Database database;
     private FileHandler fileHandler;
+    private Member member;
 
-    public Controller(Database database) {
+
+    public Controller() {
         this.database = new Database();
         this.fileHandler = new FileHandler();
         fileHandler.setDatabase(database);
-
     }
 
-    public void createMember(String firstName, String lastName, boolean swimType, int age, boolean active, int idNumber) {
-        database.createMember(firstName, lastName, swimType, age, active, idNumber);
-    }
-    public void createCompetitionResult(double timeResult, boolean practice, int placement, String discipline, String tournamentName, String date, int membershipNumber) {
-        database.createCompetitionResult(timeResult, practice, placement, discipline, tournamentName, date, membershipNumber);
-    }
-
-    public void createTrainingResult(double timeResult, boolean practice, String discipline, String date, int membershipNumber, boolean isJunior) {
-        database.createTrainingResult(timeResult, practice, discipline, date, membershipNumber, isJunior);
-    }
-    public void createTestDataCoach() {
-        database.createCoachData();
+    public void createMember(String firstName, String lastName, boolean swimType, int age, boolean aktivitetsForm, int memberShipNumber) {
+        database.createMember(firstName, lastName, swimType, age, aktivitetsForm, memberShipNumber);
     }
 
     public void createTestData() {
         database.createTestData();
     }
 
+    public void createTestDataCoach() {
+        database.createCoachData();
+    }
+
     public void createTournamentResultTestData() {
         database.createTournamentResultTestData();
     }
 
-    public void createPracticeResultTestData() {
-        database.createPracticeResultTestData();
+    public void createTrainingResultTestData() {
+        database.createTrainingResultTestData();
     }
 
+    public void createCompetitionResult(double timeResult, boolean practice, int placement, String discipline, String tournamentName, String date, int membershipNumber) {
+        database.createCompetitionResult(timeResult, practice, placement, discipline, tournamentName, date, membershipNumber);
+    }
 
-    public void setJuniorOrSenior() {
-        database.setJuniorOrSenior();
+    public void createTrainingResult(double timeResult, boolean practice, String discipline, String date, int membershipNumber, boolean isJunior) {
+        database.createTrainingResult(timeResult, practice, discipline, date, membershipNumber, isJunior);
     }
 
     public ArrayList<Member> getMembers() {
@@ -62,11 +60,6 @@ public class Controller {
 
     public ArrayList<CompetitionResult> getCompetitionResults() {
         return database.getCompetitionResult();
-    }
-
-
-    public boolean deleteMember(Member member) {
-        return database.deleteMembers(member);
     }
 
     public ArrayList<Member> searchMembersFirstName(String searchTerm) {
@@ -86,6 +79,21 @@ public class Controller {
             database.addAll(members);
         } catch (FileNotFoundException e) {
         }
+    }
 
+    public void setJuniorOrSenior() {
+        database.setJuniorOrSenior();
+    }
+
+    public boolean deleteMember(Member member) {
+        return database.deleteMembers(member);
+    }
+
+    public double getTotalPayment() {
+        return database.getTotalPayment();
+    }
+
+    public void sortTopFive () {
+        database.sortTopFive();
     }
 }
