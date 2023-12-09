@@ -1,24 +1,24 @@
 package domain_model;
 
 public class TrainingResult {
-    private int idNumber;
+    private String firstName;
     private double timeResult;
-    private boolean isPractice;
+    private boolean isTraining;
     private String discipline;
-    private String date;
+    private int date;
     private boolean isJunior;
 
-    public TrainingResult(double timeResult, boolean isPractice, String discipline, String date, int membershipNumber, boolean isJunior) {
+    public TrainingResult(double timeResult, boolean isTraining, String discipline, int date, String firstName, boolean isJunior) {
         this.timeResult = timeResult;
-        this.isPractice = isPractice;
+        this.isTraining = isTraining;
         this.discipline = discipline;
         this.date = date;
-        this.idNumber = membershipNumber;
+        this.firstName = firstName;
         this.isJunior = isJunior;
     }
 
-    public int getIdNumber() {
-        return idNumber;
+    public String getFirstName() {
+        return firstName;
     }
     public double getResult() {
         return timeResult;
@@ -28,7 +28,7 @@ public class TrainingResult {
         this.timeResult = timeResult;
     }
 
-    public String getDate() {
+    public int getDate() {
         return date;
     }
 
@@ -40,16 +40,16 @@ public class TrainingResult {
         return isJunior;
     }
 
-    public boolean isPractice() {
-        return isPractice;
+    public boolean isTraining() {
+        return isTraining;
     }
 
-    public void setIdNumber(int idNumber) {
-        this.idNumber = idNumber;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public void setPractice(boolean practice) {
-        isPractice = practice;
+    public void setTraining(boolean training) {
+        isTraining = training;
     }
 
 
@@ -57,7 +57,7 @@ public class TrainingResult {
         this.discipline = discipline;
     }
 
-    public void setDate(String date) {
+    public void setDate(int date) {
         this.date = date;
     }
 
@@ -66,7 +66,7 @@ public class TrainingResult {
     }
 
     public String toString() {
-        return ("Medlemsnummer: " + idNumber + "Tid: " + timeResult + "\n" + "Disciplin: " + discipline + "\n" +
+        return ("Fornavn: " + firstName + "Tid: " + timeResult + "\n" + "Disciplin: " + discipline + "\n" +
                 "\n" + "Dato: " + date + "\n");
     }
 

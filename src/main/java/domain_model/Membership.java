@@ -9,10 +9,14 @@ public class Membership {
         this.member = member;
     }
 
+    public Membership() {
+
+    }
+
 
     public double getMembershipForEachMember() {
 
-        if (member.isActive() == true) {
+        if (member.isActive()) {
             if (member.memberAgeGroup() == ageGroup.UNDER_18) {
                 payment = 1000;
             } else if (member.memberAgeGroup() == ageGroup.OVER_18) {

@@ -144,11 +144,11 @@ public class UserInterface {
         } while (activityAnswer != 'a' || activityAnswer != 'p');
 
 
-        System.out.println("Indtast medlemsnummer");
-        int idNumber = 0;
+            System.out.println("Indtast fødselsdag");
+        int birthday = 0;
         do {
             try {
-                idNumber = scanner.nextInt();
+                birthday = scanner.nextInt();
                 scanner.nextLine();
                 writingError = false;
             } catch (InputMismatchException e) {
@@ -159,7 +159,7 @@ public class UserInterface {
         } while (writingError == true);
 
 
-        controller.createMember(firstName, lastName, competitive, age, active, idNumber);
+        controller.createMember(firstName, lastName, competitive, age, active, birthday);
         controller.setJuniorOrSenior();
 
     }
@@ -246,7 +246,7 @@ public class UserInterface {
             editMember.setActive(active);
 
 
-            System.out.println("Medlemsnummer: " + editMember.getIdNumber());
+            System.out.println("Fødselsdag: " + editMember.getBirthday());
             do {
                 String newMembershipNumber = scanner.nextLine().trim();
                 if (!newMembershipNumber.isEmpty()) {
@@ -285,7 +285,7 @@ public class UserInterface {
                 else
                     System.out.println("Medlemsstatus: Passivt");
                 System.out.println("Alder: " + member.getAge());
-                System.out.println("Medlemsnummer: " + member.getIdNumber());
+                System.out.println("Fødselsdag: " + member.getBirthday());
 
                 controller.setJuniorOrSenior();
                 if (member.isJunior() == true) {
@@ -301,44 +301,44 @@ public class UserInterface {
 
     public void searchMembers() {
 
-            System.out.print("Indtast fornavn: ");
-            scanner.nextLine();
-            String searchTerm = scanner.nextLine();
+        System.out.print("Indtast fornavn: ");
+        scanner.nextLine();
+        String searchTerm = scanner.nextLine();
+        System.out.println("");
+
+        ArrayList<Member> searchResult = controller.searchMembersFirstName(searchTerm);
+
+        if (searchResult.isEmpty()) {
+            System.out.println("Ingen medlemmer med dette navn blev fundet i systemet");
             System.out.println("");
-
-            ArrayList<Member> searchResult = controller.searchMembersFirstName(searchTerm);
-
-            if (searchResult.isEmpty()) {
-                System.out.println("Ingen medlemmer med dette navn blev fundet i systemet");
-                System.out.println("");
-            } else {
-                System.out.println("Medlemmer fundet");
-                for (Member member : searchResult) {
-                    System.out.println("Navn: " + member.getFirstName());
-                    System.out.println("Efternavn: " + member.getLastName());
-                    if (member.isCompetitive() == true) {
-                        System.out.println("Svømmetype: Konkurrencesvømmer");
-                    } else {
-                        System.out.println("Svømmetype: Motionistsvømmer");
-                    }
-                    if (member.isActive() == true) {
-                        System.out.println("Medlemsstatus: Aktivt");
-                    } else {
-                        System.out.println("Medlemsstatus: Passivt");
-                    }
-                    System.out.println("Alder: " + member.getAge());
-                    System.out.println("Medlemsnummer: " + member.getIdNumber());
-                    if (member.isJunior() == true) {
-                        System.out.println("Aldersgruppe: Junior");
-                    } else {
-                        System.out.println("Aldersgruppe: Senior");
-                    }
-                    System.out.println("");
+        } else {
+            System.out.println("Medlemmer fundet");
+            for (Member member : searchResult) {
+                System.out.println("Navn: " + member.getFirstName());
+                System.out.println("Efternavn: " + member.getLastName());
+                if (member.isCompetitive() == true) {
+                    System.out.println("Svømmetype: Konkurrencesvømmer");
+                } else {
+                    System.out.println("Svømmetype: Motionistsvømmer");
                 }
+                if (member.isActive() == true) {
+                    System.out.println("Medlemsstatus: Aktivt");
+                } else {
+                    System.out.println("Medlemsstatus: Passivt");
+                }
+                System.out.println("Alder: " + member.getAge());
+                System.out.println("Fødselsdag: " + member.getBirthday());
+                if (member.isJunior() == true) {
+                    System.out.println("Aldersgruppe: Junior");
+                } else {
+                    System.out.println("Aldersgruppe: Senior");
+                }
+                System.out.println("");
             }
+        }
 
 
-            }
+    }
 
 
 
@@ -384,7 +384,7 @@ public class UserInterface {
             System.out.println("Samlet kontingent for året: " + controller.getTotalPayment() + " kr." + "\n");
 
 
-    }
+        }
     }
 
     public void seeTeams() {
@@ -406,7 +406,7 @@ public class UserInterface {
             for (Member member : controller.getMembers()) {
                 controller.setJuniorOrSenior();
                 if (member.isJunior() == false) {
-                    System.out.println(member.getFirstName() + " \n ");
+                    System.out.println(member.getFirstName() + " " + member.getLastName() + " \n ");
                 }
             }
 
@@ -435,22 +435,10 @@ public class UserInterface {
         System.out.println("Registrere konkurrenceresultater - Tast 2");
         int menu = scanner.nextInt();
         if (menu == 1) {
-            boolean isPractice = true;
-
-            System.out.println("Indtast medlemsnummer:");
-            int idNumber = 0;
-            do {
-                try {
-                    idNumber = scanner.nextInt();
-                    scanner.nextLine();
-                    writingError = false;
-                } catch (InputMismatchException e) {
-                    System.out.println("Tastefejl, indtast kun tal");
-                    scanner.nextLine();
-                    writingError = true;
-                }
-            } while (writingError == true);
-
+            boolean isTraining = true;
+            scanner.nextLine();
+            System.out.println("Indtast fornavn");
+            String firstName = scanner.nextLine();
             System.out.println("Indtast træningstid i sekunder:");
             double timeResult = 0;
             do {
@@ -470,7 +458,18 @@ public class UserInterface {
             String disciplin = scanner.nextLine();
 
             System.out.println("Indtast dato:");
-            String date = scanner.nextLine();
+            int date = 0;
+            do {
+                try {
+                    date = scanner.nextInt();
+                    writingError = false;
+                } catch (InputMismatchException e) {
+                    System.out.println("Tastefejl, indtast kun tal");
+                    scanner.nextLine();
+                    writingError = true;
+                }
+            } while (writingError == true);
+
 
             System.out.println("Indtast alder:");
             boolean isJunior;
@@ -481,24 +480,14 @@ public class UserInterface {
             } else {
                 isJunior = false;
             }
-            controller.createTrainingResult(timeResult, isPractice, disciplin, date, idNumber, isJunior);
+            controller.createTrainingResult(timeResult, isTraining, disciplin, date, firstName, isJunior);
 
 
         } else if (menu == 2) {
-            boolean isPractice = false;
-            System.out.println("Indtast medlemsnummer:");
-            int idNumber = 0;
-            do {
-                try {
-                    idNumber = scanner.nextInt();
-                    scanner.nextLine();
-                    writingError = false;
-                } catch (InputMismatchException e) {
-                    System.out.println("Tastefejl, indtast kun et tal");
-                    scanner.nextLine();
-                    writingError = true;
-                }
-            } while (writingError == true);
+            boolean isTraining = false;
+            scanner.nextLine();
+            System.out.println("Indtast fornavn");
+            String firstName = scanner.nextLine();
 
             System.out.println("Indtast konkurrencetid i sekunder:");
             double timeResult = 0;
@@ -516,13 +505,13 @@ public class UserInterface {
 
             System.out.println("Indtast disciplin:");
             String disciplin = scanner.nextLine();
-            scanner.nextLine();
+
 
             System.out.println("Indtast placering:");
             int placement = 0;
             do {
                 try {
-                    idNumber = scanner.nextInt();
+                    placement = scanner.nextInt();
                     scanner.nextLine();
                     writingError = false;
                 } catch (InputMismatchException e) {
@@ -536,10 +525,20 @@ public class UserInterface {
             String tournamentName = scanner.nextLine();
 
             System.out.println("Indtast dato:");
-            String date = scanner.nextLine();
-            System.out.println("\n");
+            int date = 0;
+            do {
+                try {
+                    date = scanner.nextInt();
+                    writingError = false;
+                } catch (InputMismatchException e) {
+                    System.out.println("Tastefejl, indtast kun tal");
+                    scanner.nextLine();
+                    writingError = true;
+                }
+            } while (writingError == true);
 
-            controller.createCompetitionResult(timeResult, isPractice, placement, disciplin, tournamentName, date, idNumber);
+
+            controller.createCompetitionResult(timeResult, isTraining, placement, disciplin, tournamentName, date, firstName);
         }
 
     }
@@ -567,7 +566,7 @@ public class UserInterface {
                     writingError = false;
                     editResult = controller.getTrainingResults().get(number - 1);
                 } catch (InputMismatchException ime) {
-                    System.out.println("Skriv kun numre, tak!");
+                    System.out.println("Indtast kun et nummer");
                     scanner.nextLine();
                     writingError = true;
                 }
@@ -575,20 +574,10 @@ public class UserInterface {
 
 
 
-            System.out.println("Medlemsnummer: " + editResult.getIdNumber());
-            do {
-                String newMembershipNumber = scanner.nextLine().trim();
-                if (!newMembershipNumber.isEmpty()) {
-                    try {
-                        editResult.setIdNumber(Integer.parseInt(newMembershipNumber));
-                        writingError = false;
-
-                    } catch (NumberFormatException nfe) {
-                        System.out.println("Tastefejl, indtast kun tal");
-                        writingError = true;
-                    }
-                }
-            } while (writingError == true);
+            System.out.println("Fornavn: " + editResult.getFirstName());
+            String newFirstName = scanner.nextLine();
+            if (!newFirstName.isEmpty())
+                editResult.setFirstName(newFirstName);
 
 
             System.out.println("Disciplin: " + editResult.getDiscipline());
@@ -614,9 +603,19 @@ public class UserInterface {
 
 
             System.out.println("Dato: " + editResult.getDate());
-            String newDate = scanner.nextLine();
-            if (!newDate.isEmpty())
-                editResult.setDate(newDate);
+            do {
+                String newResult = scanner.nextLine().trim();
+                if (!newResult.isEmpty()) {
+                    try {
+                        editResult.setDate(Integer.parseInt(newResult));
+                        writingError = false;
+
+                    } catch (NumberFormatException nfe) {
+                        System.out.println("Tastefejl, indtast kun tal");
+                        writingError = true;
+                    }
+                }
+            } while (writingError == true);
 
         } else if (menu == 2) {
 
@@ -643,21 +642,10 @@ public class UserInterface {
             } while (writingError == true);
 
 
-            System.out.println("Medlemsnummer: " + editResult.getIdNumber());
-            do {
-                String newMembershipNumber = scanner.nextLine().trim();
-                if (!newMembershipNumber.isEmpty()) {
-                    try {
-                        editResult.setIdNumber(Integer.parseInt(newMembershipNumber));
-                        writingError = false;
-
-                    } catch (NumberFormatException e) {
-                        System.out.println("Tastefejl, indtast kun tal");
-                        writingError = true;
-                    }
-                }
-            } while (writingError == true);
-
+            System.out.println("Fornavn: " + editResult.getFirstName());
+            String newFirstName = scanner.nextLine();
+            if (!newFirstName.isEmpty())
+                editResult.setFirstName(newFirstName);
 
             System.out.println("Disciplin: " + editResult.getDiscipline());
             String newDisciplin = scanner.nextLine();
@@ -697,10 +685,20 @@ public class UserInterface {
             } while (writingError == true);
 
 
-            System.out.println("Dato: " + editResult.getDate());
-            String newDate = scanner.nextLine();
-            if (!newDate.isEmpty())
-                editResult.setDate(newDate);
+            System.out.println("Tid: " + editResult.getResult());
+            do {
+                String newResult = scanner.nextLine().trim();
+                if (!newResult.isEmpty()) {
+                    try {
+                        editResult.setDate(Integer.parseInt(newResult));
+                        writingError = false;
+
+                    } catch (NumberFormatException nfe) {
+                        System.out.println("Tastefejl, indtast kun tal");
+                        writingError = true;
+                    }
+                }
+            } while (writingError == true);
 
 
             System.out.println("Stævnenavn: " + editResult.getTournamentName());
@@ -714,12 +712,12 @@ public class UserInterface {
 
     public void seeResults() {
         System.out.println("Se træningsresultater - Tast 1");
-        System.out.println(" Se konkurrenceresultater - Tast 2");
+        System.out.println("Se konkurrenceresultater - Tast 2");
         int menu = scanner.nextInt();
         if (menu == 1) {
             System.out.println("Træningresultater: " + "\n");
             for (TrainingResult result : controller.getTrainingResults()) {
-                System.out.println("Medlemsnummer: " + result.getIdNumber());
+                System.out.println("Fornavn: " + result.getFirstName());
                 System.out.println("Dicsiplin: " + result.getDiscipline());
                 System.out.println("Tid: " + result.getResult());
                 System.out.println("Dato: " + result.getDate());
@@ -730,7 +728,7 @@ public class UserInterface {
             }
         } else if (menu == 2) {
             for (CompetitionResult result : controller.getCompetitionResults()) {
-                System.out.println("Medlemsnummer: " + result.getIdNumber());
+                System.out.println("Fornavn: " + result.getFirstName());
                 System.out.println("Disciplin: " + result.getDiscipline());
                 System.out.println("Tid: " + result.getResult());
                 System.out.println("Placering: " + result.getPlacement());
@@ -746,23 +744,23 @@ public class UserInterface {
     }
 
     public ArrayList<TrainingResult> findJuniorResults() {
-        ArrayList<TrainingResult> practiceResultsJunior = new ArrayList<>();
+        ArrayList<TrainingResult> trainingResultsJunior = new ArrayList<>();
         for (TrainingResult result : controller.getTrainingResults()) {
             if (result.isJunior()) {
-                practiceResultsJunior.add(result);
+                trainingResultsJunior.add(result);
             }
         }
-        return practiceResultsJunior;
+        return trainingResultsJunior;
     }
 
     public ArrayList<TrainingResult> findSeniorResults() {
-        ArrayList<TrainingResult> practiceResultsSenior = new ArrayList<>();
+        ArrayList<TrainingResult> trainingResultsSenior = new ArrayList<>();
         for (TrainingResult result : controller.getTrainingResults()) {
             if (!result.isJunior()) {
-                practiceResultsSenior.add(result);
+                trainingResultsSenior.add(result);
             }
         }
-        return practiceResultsSenior;
+        return trainingResultsSenior;
     }
 
     public List<TrainingResult> getTopFive(ArrayList<TrainingResult> results) {
@@ -787,7 +785,7 @@ public class UserInterface {
             for (TrainingResult practiceResult : juniorResultsTopFive) {
                 System.out.println("Discpline: " + practiceResult.getDiscipline() + "\n" +
                         "Resultat: " + practiceResult.getResult() + "\n" +
-                        "Medlemsnummer: " + practiceResult.getIdNumber() + "\n");
+                        "Fornavn: " + practiceResult.getFirstName() + "\n");
 
             }
 
@@ -798,10 +796,10 @@ public class UserInterface {
             ArrayList<TrainingResult> seniorResults = findSeniorResults();
             List<TrainingResult> seniorResultsTopFive = getTopFive(seniorResults);
 
-            for (TrainingResult practiceResult : seniorResultsTopFive) {
-                System.out.println("Discplin: " + practiceResult.getDiscipline() + "\n" +
-                        "Resultat: " + practiceResult.getResult() + "\n" +
-                        "Medlemsnummer: " + practiceResult.getIdNumber() + "\n");
+            for (TrainingResult trainingResult : seniorResultsTopFive) {
+                System.out.println("Discplin: " + trainingResult.getDiscipline() + "\n" +
+                        "Resultat: " + trainingResult.getResult() + "\n" +
+                        "Fornavn: " + trainingResult.getFirstName() + "\n");
             }
         }
     }
@@ -811,4 +809,3 @@ public class UserInterface {
         System.exit(9);
     }
 }
-

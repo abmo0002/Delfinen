@@ -1,6 +1,5 @@
 package domain_model;
 
-import datasource.Database;
 import datasource.FileHandler;
 
 import java.io.FileNotFoundException;
@@ -18,8 +17,8 @@ public class Controller {
         fileHandler.setDatabase(database);
     }
 
-    public void createMember(String firstName, String lastName, boolean swimType, int age, boolean aktivitetsForm, int memberShipNumber) {
-        database.createMember(firstName, lastName, swimType, age, aktivitetsForm, memberShipNumber);
+    public void createMember(String firstName, String lastName, boolean swimType, int age, boolean activity, int birthday) {
+        database.createMember(firstName, lastName, swimType, age, activity, birthday);
     }
 
     public void createTestData() {
@@ -38,12 +37,12 @@ public class Controller {
         database.createTrainingResultTestData();
     }
 
-    public void createCompetitionResult(double timeResult, boolean practice, int placement, String discipline, String tournamentName, String date, int membershipNumber) {
-        database.createCompetitionResult(timeResult, practice, placement, discipline, tournamentName, date, membershipNumber);
+    public void createCompetitionResult(double timeResult, boolean training, int placement, String discipline, String tournamentName, int date, String firstName) {
+        database.createCompetitionResult(timeResult, training, placement, discipline, tournamentName, date, firstName);
     }
 
-    public void createTrainingResult(double timeResult, boolean practice, String discipline, String date, int membershipNumber, boolean isJunior) {
-        database.createTrainingResult(timeResult, practice, discipline, date, membershipNumber, isJunior);
+    public void createTrainingResult(double timeResult, boolean training, String discipline, int date, String firstName, boolean isJunior) {
+        database.createTrainingResult(timeResult, training, discipline, date, firstName, isJunior);
     }
 
     public ArrayList<Member> getMembers() {

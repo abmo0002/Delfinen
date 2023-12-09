@@ -2,28 +2,27 @@ package domain_model;
 
 public class CompetitionResult {
 
-    private int idNumber;
+    private String firstName;
     private double timeResult;
-    ;
-    private boolean isPractice;
+    private boolean isTraining;
     private int placement;
     private String discipline;
     private String tournamentName;
-    private String date;
+    private int date;
 
-    public CompetitionResult(double timeResult, boolean isPractice, int placement, String discipline, String tournamentName, String date, int idNumber) {
+    public CompetitionResult(double timeResult, boolean isTraining, int placement, String discipline, String tournamentName, int date, String firstName) {
         this.timeResult = timeResult;
-        this.isPractice = isPractice;
+        this.isTraining = isTraining;
         this.placement = placement;
         this.discipline = discipline;
         this.tournamentName = tournamentName;
         this.date = date;
-        this.idNumber = idNumber;
+        this.firstName = firstName;
 
     }
 
-    public int getIdNumber() {
-        return idNumber;
+    public String getFirstName() {
+        return firstName;
     }
 
     public double getResult() {
@@ -34,8 +33,8 @@ public class CompetitionResult {
         this.timeResult = timeResult;
     }
 
-    public boolean isPractice() {
-        return isPractice;
+    public boolean isTraining() {
+        return isTraining;
     }
 
     public int getPlacement() {
@@ -50,15 +49,15 @@ public class CompetitionResult {
         return tournamentName;
     }
 
-    public String getDate() {
+    public int getDate() {
         return date;
     }
 
-    public void setIdNumber(int idNumber) {
-        this.idNumber = idNumber;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public void setDate(String date) {
+    public void setDate(int date) {
         this.date = date;
     }
 
@@ -71,8 +70,8 @@ public class CompetitionResult {
     }
 
 
-    public void setPractice(boolean practice) {
-        isPractice = practice;
+    public void setTraining(boolean training) {
+        isTraining = training;
     }
 
     public void setTournamentName(String tournamentName) {
@@ -81,7 +80,7 @@ public class CompetitionResult {
 
 
     public String toString() {
-        return ("Medlemsnummer: " + idNumber + "\n" + "Tid: " + timeResult + "\n" +
+        return ("Fornavn: " + firstName + "\n" + "Tid: " + timeResult + "\n" +
                 "Placering : " + placement + "\n" + "Disciplin: " + discipline + "\n" +
                 "Dato: " + date + "\n" + "Stævne " + tournamentName + "\n");
     }

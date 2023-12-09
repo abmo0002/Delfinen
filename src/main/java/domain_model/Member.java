@@ -9,19 +9,19 @@ public class Member {
     private boolean isCompetitive;
     private int age;
     private boolean isActive;
-    private int idNumber;
+    private int birthday;
     private boolean isJunior;
 
     public Member() {
     }
 
-    public Member(String firstName, String lastName, boolean isCompetitive, int age, boolean isActive, int idNumber) {
+    public Member(String firstName, String lastName, boolean isCompetitive, int age, boolean isActive, int birthday) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.isCompetitive = isCompetitive;
         this.age = age;
         this.isActive = isActive;
-        this.idNumber = idNumber;
+        this.birthday = birthday;
         this.membership = new Membership(this);
     }
 
@@ -45,8 +45,8 @@ public class Member {
         return isActive;
     }
 
-    public int getIdNumber() {
-        return idNumber;
+    public int getBirthday() {
+        return birthday;
     }
 
     public boolean isJunior() {
@@ -74,8 +74,8 @@ public class Member {
         this.isActive = active;
     }
 
-    public void setIdNumber(int memberShipNumber) {
-        this.idNumber = memberShipNumber;
+    public void setBirthday(int birthday) {
+        this.birthday = birthday;
     }
 
     public void setJunior(boolean junior) {
@@ -110,7 +110,7 @@ public class Member {
     }
     public String toString() {
         return ("Fornavn: " + firstName + "\n" + "Efternavn: " + lastName + "\n" + "Alder: " + age + "\n" + "Aktiv: " + isActive + "\n" + "Konkurrencesvømmer: " + isCompetitive + "\n"
-                + "MedlemID " + idNumber + "\n" + "Aldergruppe " + isJunior + "\n");
+                + "Fødselsdag " + birthday + "\n" + "Aldergruppe " + isJunior + "\n");
     }
 
 }

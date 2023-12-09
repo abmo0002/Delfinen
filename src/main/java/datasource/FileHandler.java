@@ -1,6 +1,8 @@
 package datasource;
 
+import domain_model.Database;
 import domain_model.Member;
+
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -20,7 +22,7 @@ public class FileHandler {
 
     public void saveData(ArrayList<Member> members) throws FileNotFoundException {
 
-        if (database.isChangesMade() == true) {
+        if (database.isChangesMade()) {
             PrintStream output = new PrintStream(new File("memberDatabase.csv"));
 
             for (Member member : members) {
@@ -34,7 +36,7 @@ public class FileHandler {
                 output.print(";");
                 output.print(member.isCompetitive());
                 output.print(";");
-                output.print(member.getIdNumber());
+                output.print(member.getBirthday());
                 output.print(";");
                 output.print(member.isJunior());
                 output.println();
@@ -77,8 +79,8 @@ public class FileHandler {
         member.setActive(membershipsStatus);
         boolean swimType = Boolean.parseBoolean(parts[4]);
         member.setCompetitive(swimType);
-        int idNumber = Integer.parseInt(parts[5]);
-        member.setIdNumber(idNumber);
+        int birthday = Integer.parseInt(parts[5]);
+        member.setBirthday(birthday);
         boolean membershipAgeGroup = Boolean.parseBoolean(parts[6]);
         member.setJunior(membershipAgeGroup);
 
@@ -86,3 +88,5 @@ public class FileHandler {
 
     }
 }
+
+

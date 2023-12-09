@@ -1,4 +1,4 @@
-package datasource;
+package domain_model;
 
 import domain_model.*;
 import domain_model.comparators.ResultComparator;
@@ -30,15 +30,15 @@ public class Database {
         this.changesMade = changesMade;
     }
 
-    public Member createMember(String firstName, String lastName, boolean competitive, int age, boolean active, int membershipNumber) {
-        Member member = new Member(firstName, lastName, competitive, age, active, membershipNumber);
+    public Member createMember(String firstName, String lastName, boolean competitive, int age, boolean active, int birthday) {
+        Member member = new Member(firstName, lastName, competitive, age, active, birthday);
         memberData.add(member);
 
         return member;
     }
 
-    public Coach createCoach(String firstName, String lastName, boolean isCompetitive, int age, boolean isActive, int membershipNumber, boolean isCoach) {
-        Coach coach = new Coach(firstName, lastName, isCompetitive, age, isActive, membershipNumber, isCoach);
+    public Coach createCoach(String firstName, String lastName, boolean isCompetitive, int age, boolean isActive, int birthday, boolean isCoach) {
+        Coach coach = new Coach(firstName, lastName, isCompetitive, age, isActive, birthday, isCoach);
         coachData.add(coach);
 
         return coach;
@@ -48,8 +48,8 @@ public class Database {
     }
 
     public void createCoachData() {
-        createCoach("Niels", "Rasmussen", false, 60, true, 2244, true);
-        createCoach("Kim", "Toft", false, 20, true, 1122, false);
+        createCoach("Niels", "Rasmussen", false, 60, true, 020265, true);
+        createCoach("Kim", "Toft", false, 20, true, 020203, false);
     }
 
     public void createTournamentResultTestData () {
@@ -116,14 +116,14 @@ public class Database {
         }
     }
 
-    public CompetitionResult createCompetitionResult(double timeResult, boolean practice, int placement, String discipline, String tournamentName, String date, int membershipNumber) {
-        CompetitionResult competitionResults = new CompetitionResult(timeResult, practice, placement, discipline, tournamentName, date, membershipNumber);
+    public CompetitionResult createCompetitionResult(double timeResult, boolean training, int placement, String discipline, String tournamentName, int date, String firstName) {
+        CompetitionResult competitionResults = new CompetitionResult(timeResult, training, placement, discipline, tournamentName, date, firstName);
         competitionResult.add(competitionResults);
         return competitionResults;
     }
 
-    public TrainingResult createTrainingResult(double timeResult, boolean practice, String discipline, String date, int membershipNumber, boolean isJunior) {
-        TrainingResult trainingResults = new TrainingResult(timeResult, practice, discipline, date, membershipNumber, isJunior);
+    public TrainingResult createTrainingResult(double timeResult, boolean training, String discipline, int date, String firstName, boolean isJunior) {
+        TrainingResult trainingResults = new TrainingResult(timeResult, training, discipline, date, firstName, isJunior);
         trainingResult.add(trainingResults);
         return trainingResults;
     }
